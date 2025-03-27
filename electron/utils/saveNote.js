@@ -2,13 +2,26 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 
-export function saveNote(data) {
-  const desktopDir = path.join(os.homedir(), 'Desktop');
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const fileName = data.filename || `note_${timestamp}.txt`;
-  const filePath = path.join(desktopDir, fileName);
+/**
+ * @typedef {Object} SaveNoteProps
+ * @property {string} note
+ * @property {string} projectName
+ * @property {string} [filename]
+ */
 
-  fs.writeFileSync(filePath, data.note, 'utf8');
+export function saveNote(data) {
+  const baseDir = path.join(os.homedir(), 'Desktop', 'MWU Notes');
+  const projectDir = path.join(baseDir, data.projectName);
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const fileName = data.filename || `note_${timestamp}.md`;
+  const filePath = path.join(projectDir, fileName);
+
+  // Ensure project folder exists
+  fs.mkdirSync(projectDir, { recursive: true });
+
+  // Save markdown note
+  const markdown = `# Note for ${data.projectName}\n\n${data.note}`;
+  fs.writeFileSync(filePath, markdown, 'utf8');
 
   console.log(`✅ Note saved to: ${filePath}`);
 }
