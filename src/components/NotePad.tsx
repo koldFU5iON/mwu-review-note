@@ -1,15 +1,78 @@
+declare global {
+  interface Window {
+    electronAPI: {
+      saveNote: (note: string, filename?: string) => void;
+    };
+  }
+}
+
+
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+
+
+// form
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const formSchema = z.object({
+  note: z.string().min(2, {
+    message: "Note must be at least 2 characters.",
+  }),
+})
 
 export const NotePad = () => {
-    return (
-    <div className='flex flex-col w-lg space-y-2 m-2'>
-        <Label htmlFor="note">Notes:</Label>
-        <Input name="note" placeholder='tell us about the game'/>
-        <div className="flex flex-row w-full justify-end">
-        <Button>Submit</Button>
-
-        </div>
-      </div>)
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      note: "",
+    },
+  });
+  
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const { note } = values;
+    console.log('📝 Submitting note:', note);
+    console.log('electronAPI:', window.electronAPI);
+  
+    if (window.electronAPI?.saveNote) {
+      window.electronAPI.saveNote(note);
+    } else {
+      alert("❌ electronAPI not available!");
+    }
+  }
+  
+  
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="note"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Add a Note:</FormLabel>
+              <FormControl>
+                <Textarea className="h-100 max-h-120 align-top" placeholder="shadcn" {...field} />
+              </FormControl>
+              <FormDescription>
+                Here is where you can submit notes about your game experience.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  )
 }
