@@ -22,6 +22,7 @@ function createWindow() {
     height: 600,
     alwaysOnTop: false,
     autoHideMenuBar: true,
+    openDevTools: false,
     show: true,
     webPreferences: {
       contextIsolation: true,

@@ -1,20 +1,14 @@
+import Layout from "./Layout";
+import { NotePad } from "./components/NotePad";
 
-import { NotePad } from './components/NotePad'
-
-import './index.css'
+import "./index.css";
 
 function App() {
-
-
   return (
-    <div className='flex flex-col w-full items-center'>
-      <div className='w-lg m-4'>
-
+    <Layout>
       <NotePad />
-
-      </div>
-    </div>
-  )
+    </Layout>
+  );
 }
 
-export default App
+export default App;
