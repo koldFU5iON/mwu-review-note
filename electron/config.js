@@ -1,4 +1,4 @@
-// electron/config.js
+// ✅ config.js — converted to ESM
 import fs from "fs";
 import path from "path";
 import os from "os";
@@ -6,7 +6,6 @@ import os from "os";
 const configDir = path.join(os.homedir(), ".mwu-notes");
 const configPath = path.join(configDir, "app.config.json");
 
-// Initialize if missing
 function initConfig() {
   if (!fs.existsSync(configPath)) {
     const defaultConfig = {
@@ -25,8 +24,7 @@ function initConfig() {
 
 export function getConfig() {
   initConfig();
-  const data = fs.readFileSync(configPath, "utf-8");
-  return JSON.parse(data);
+  return JSON.parse(fs.readFileSync(configPath, "utf-8"));
 }
 
 export function setConfig(key, value) {
