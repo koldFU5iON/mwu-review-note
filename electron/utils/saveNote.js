@@ -1,6 +1,6 @@
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
+import fs from "fs";
+import path from "path";
+import { getConfig } from "../config.js";
 
 /**
  * @typedef {Object} SaveNoteProps
@@ -10,9 +10,10 @@ import os from 'os';
  */
 
 export function saveNote(data) {
-  const baseDir = path.join(os.homedir(), 'Desktop', 'MWU Notes');
-  const projectDir = path.join(baseDir, data.projectName);
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const rootDir = getConfig().defaultProjectDirectory;
+  const projectDir = path.join(rootDir, data.projectName);
+
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const fileName = data.filename || `note_${timestamp}.md`;
   const filePath = path.join(projectDir, fileName);
 
@@ -21,7 +22,7 @@ export function saveNote(data) {
 
   // Save markdown note
   const markdown = `# Note for ${data.projectName}\n\n${data.note}`;
-  fs.writeFileSync(filePath, markdown, 'utf8');
+  fs.writeFileSync(filePath, markdown, "utf8");
 
   console.log(`✅ Note saved to: ${filePath}`);
 }

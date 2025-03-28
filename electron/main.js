@@ -24,6 +24,9 @@ ipcMain.handle("set-config", (_event, key, value) => {
   setConfig(key, value);
 });
 
+const config = getConfig(); // 👈 this triggers the creation
+console.log("🛠 Config loaded:", config);
+
 console.log("🔍 preload path:", path.join(__dirname, "preload.js"));
 
 function createWindow() {
