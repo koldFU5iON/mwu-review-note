@@ -24,6 +24,7 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   note: z.string().min(2, {
@@ -52,14 +53,16 @@ export const NotePad = () => {
     }
 
     if (window.electronAPI?.saveNote) {
+      const timestamp = new Date();
       window.electronAPI.saveNote(values);
+      toast(`${values.projectName} saved!\n ${timestamp.toLocaleDateString()}`);
     } else {
       alert("❌ electronAPI not available!");
     }
   }
 
   return (
-    <div className="flex flex-col border rounded-md w-lg p-2 ml-2">
+    <div className="flex flex-col border rounded-md p-2 m-2">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <Field name="projectName" control={form.control} label="">
