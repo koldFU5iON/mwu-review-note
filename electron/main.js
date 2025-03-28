@@ -12,8 +12,15 @@ const __dirname = path.dirname(__filename);
 
 let mainWindow;
 
-ipcMain.on("save-note", (event, data) => {
+import { loadProjects } from "./utils/loadProjects.js";
+
+ipcMain.handle("load-projects", async () => {
+  return loadProjects();
+});
+
+ipcMain.handle("save-note", async (event, data) => {
   saveNote(data);
+  return true;
 });
 
 ipcMain.handle("get-config", () => {

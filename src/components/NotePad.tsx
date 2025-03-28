@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Form } from "@/components/ui/form";
 
+import { useProjects } from "@/context/ProjectsContext";
 import { Field } from "@/components/form/Field";
 
 // form
@@ -22,6 +23,8 @@ const formSchema = z.object({
 });
 
 export const NotePad = () => {
+  const { refreshProjects } = useProjects(); // ✅ Destructure it here
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,9 +42,11 @@ export const NotePad = () => {
     }
 
     if (window.electronAPI?.saveNote) {
-      const timestamp = new Date();
-      window.electronAPI.saveNote(values);
-      toast(`${values.projectName} saved!\n ${timestamp.toLocaleDateString()}`);
+      window.electronAPI.saveNote(values).then(() => {
+        console.log("🔁 Refreshing projects...");
+        refreshProjects();
+        toast(`${values.projectName} saved and sidebar updated!`);
+      });
     } else {
       alert("❌ electronAPI not available!");
     }

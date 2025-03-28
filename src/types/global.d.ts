@@ -13,9 +13,10 @@ export interface SaveNoteProps {
 }
 
 export interface ElectronApi {
-  saveNote: (data: SaveNoteProps) => void;
+  saveNote: (data: SaveNoteProps) => Promise<void>;
   getConfig: () => Promise<AppConfig>;
   setConfig: <K extends keyof AppConfig>(key: K, value: AppConfig[K]) => void;
+  loadProjects: () => Promise<Record<string, { name: string; path: string }[]>>;
 }
 
 declare global {

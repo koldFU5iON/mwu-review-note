@@ -14,7 +14,7 @@ export function saveNote(data) {
   const projectDir = path.join(rootDir, data.projectName);
 
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const fileName = data.filename || `note_${timestamp}.md`;
+  const fileName = data.filename || `note_${data.projectName}-${timestamp}.md`;
   const filePath = path.join(projectDir, fileName);
 
   // Ensure project folder exists
