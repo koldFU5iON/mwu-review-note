@@ -1,17 +1,3 @@
-interface saveNoteProps {
-  note: string;
-  projectName: string;
-  filename?: string;
-}
-
-declare global {
-  interface Window {
-    electronAPI: {
-      saveNote: (data: saveNoteProps) => void;
-    };
-  }
-}
-
 import { Input } from "./ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";

@@ -5,6 +5,8 @@ import { fileURLToPath } from "url";
 import { ipcMain } from "electron";
 import { saveNote } from "./utils/saveNote.js";
 
+import { getConfig, setConfig } from "./config.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -12,6 +14,14 @@ let mainWindow;
 
 ipcMain.on("save-note", (event, data) => {
   saveNote(data);
+});
+
+ipcMain.handle("get-config", () => {
+  return getConfig();
+});
+
+ipcMain.handle("set-config", (_event, key, value) => {
+  setConfig(key, value);
 });
 
 console.log("🔍 preload path:", path.join(__dirname, "preload.js"));
