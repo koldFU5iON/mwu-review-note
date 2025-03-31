@@ -21,10 +21,29 @@ export function ProjectsProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   const refreshProjects = useCallback(() => {
-    window.electronAPI.loadProjects().then((data) => {
-      setProjects(data);
-      setIsLoading(false);
-    });
+    const attemptLoad = (retries = 5) => {
+      if (!window.electronAPI?.loadProjects) {
+        console.warn("⏳ Waiting for electronAPI...");
+        if (retries > 0) {
+          setTimeout(() => attemptLoad(retries - 1), 300);
+        }
+        return;
+      }
+
+      console.log("🚀 Loading projects via Electron...");
+      window.electronAPI
+        .loadProjects()
+        .then((data) => {
+          console.log("✅ Projects loaded:", data);
+          setProjects(data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.error("❌ Failed to load projects:", err);
+        });
+    };
+
+    attemptLoad();
   }, []);
 
   useEffect(() => {
