@@ -6,6 +6,7 @@ export function loadProjects() {
   const rootDir = getConfig().defaultProjectDirectory;
   if (!fs.existsSync(rootDir)) return {};
 
+  console.log(`root dir: ${rootDir}`);
   const folders = fs
     .readdirSync(rootDir, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
